@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "WorkerRegNumber": "xcxx",
+  "WorkerCompanyName": "xxxx",
+  "WorkerName": "xxxxx",
+  "WorkerTransferRegNumber": "xxxx",
+  "WorkerTransferCompanyName": "xxxx",
+  "WorkerTransferName": "xxxx",
+  "ShiftStartedData": "2021-06-23T14:50:10.107Z",
+  "ShiftEndedDate": "2021-06-23T14:50:10.107Z",
+  "ShiftTransferStartedDate": "2021-06-23T14:50:10.107Z",
+  "ShiftTransferEndedDate": "2021-06-23T14:50:10.107Z",
+  "ShiftStartedPhotoPath": "string",
+  "ShiftTransferredPhotoPath": "string",
+  "ShiftFinishedPhotoPath": "string",
+  "ShiftTransferFinishedPhotoPath": "string",
+  "IsShiftTransferred": false,
+  "CheifRegNumber": "string",
+  "CheifComapnyName": "string",
+  "CheifName": "string",
+  "IsActive": true
+}
