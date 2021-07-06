@@ -39,5 +39,8 @@ abstract class  LocaleKeys {
   static const Error = 'Error';
   static const UserNotFound = 'UserNotFound';
   static const Okay = 'Okay';
+  static const User = 'User';
+  static const UserToBeTransferred = 'UserToBeTransferred';
+  static const Approve = 'Approve';
 
 }

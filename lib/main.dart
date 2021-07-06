@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shift/View/HomePage.dart';
 import 'package:shift/View/LoginPage.dart';
+import 'package:shift/ViewModel/CreateShiftViewModel.dart';
 import 'package:shift/ViewModel/UserModel.dart';
 import 'package:shift/app/Constants/AppConstants.dart';
 import 'package:shift/app/Constants/PreferencesConstant.dart';
@@ -26,7 +27,9 @@ void main() async {
       child:MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => UserModel()),
-            ChangeNotifierProvider(create: (_) => ShiftModel())
+            ChangeNotifierProvider(create: (_) => ShiftModel()),
+            ChangeNotifierProvider(create: (_)=>LoginViewModel()),
+            ChangeNotifierProvider(create: (_)=>CreateShiftModelView())
           ], child:MyApp(),) ,
     ),
   );

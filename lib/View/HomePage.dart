@@ -12,6 +12,7 @@ import 'package:shift/CommonWidget/ShiftAppBarWithActions.dart';
 import 'package:shift/Model/Concrete/Shift.dart';
 import 'package:shift/Model/Concrete/Worker.dart';
 import 'package:shift/View/Abstract/BaseState.dart';
+import 'package:shift/View/Approve.dart';
 import 'package:shift/View/ShiftOptionsScreen.dart';
 import 'package:shift/View/LoginPage.dart';
 import 'package:shift/View/ShiftOperations/CreateShift.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends BaseState<HomePage> {
         context.read<UserModel>().user=Worker(userName: "Ender Erdihan", userType: UserType.WORKER,registrationNumber:regNumber);
       }
     _formattedDate = DateFormat('dd.MM.yyyy  kk:mm');
-    userType= UserType.CHIEF;
+    userType= UserType.WORKER;
   }
 
   @override
@@ -148,6 +149,10 @@ class _HomePageState extends BaseState<HomePage> {
               MaterialPageRoute(
                   builder: (context) => Options()));
         }
+        else
+          {
+            Navigator.push(context,MaterialPageRoute(builder: (context)=>Approve()));
+          }
       },
       child: Padding(
         padding: EdgeInsets.all(16),

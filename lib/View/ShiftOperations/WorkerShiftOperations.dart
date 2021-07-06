@@ -1,8 +1,9 @@
 
-import 'dart:io';
+import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shift/CommonWidget/Empty.dart';
 import 'package:shift/CommonWidget/ShiftAppBarWithoutActions.dart';
 import 'package:shift/View/Abstract/BaseState.dart';
 import 'package:shift/ViewModel/ShiftModel.dart';
@@ -13,6 +14,7 @@ import 'package:shift/app/Enums/WorkerShiftOperationType.dart';
 import 'package:shift/generated/locale_keys.g.dart';
 import 'package:shift/app/SizeConfig.dart';
 import 'package:geocoding/geocoding.dart';
+import 'dart:io';
 
 
 import '../../CommonWidget/EButton.dart';
@@ -39,6 +41,7 @@ class WorkerShiftOperations extends StatefulWidget {
 class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
   File? file;
   final picker = ImagePicker();
+   String? img64;
 
   @override
   void initState() {
@@ -65,6 +68,7 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
 
   _startShiftArea()
   {
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -75,7 +79,7 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(context.read<UserModel>().user.userName + "\n",
+                Text("$userText:"+context.read<UserModel>().user.userName + "\n",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w900,
@@ -92,6 +96,8 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
                     style: TextStyle(
                         )),
                 takePhoto(),
+                img64!=null?Image.memory(base64Decode(img64!)):Empty(),
+
               ],
             ),
           ),
@@ -99,6 +105,10 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
         ],
       ),
     );
+  }
+
+  String get userText{
+    return context.read<ShiftModel>().shiftOperationType==WorkerShiftOperationType.TRANSFER?LocaleKeys.UserToBeTransferred.tr():LocaleKeys.User.tr();
   }
 
   checkIfLocationIsMock()
@@ -112,7 +122,7 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
   EButton startShiftButton()
   {
     return EButton(
-      onPressed: ()  async {
+      onPressed: file==null?null:()  async {
         checkIfLocationIsMock();
 
         var location=await context.read<UserModel>().determinePosition();
@@ -147,9 +157,18 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
           }
       },
       icon: Icon(Icons.check),
-      text: LocaleKeys.Start.tr(),
+      text: EButtonText,
       //height: SizeConfig.safeBlockVertical * 8,
     );
+  }
+
+  String get EButtonText{
+    if(context.read<ShiftModel>().shiftOperationType==WorkerShiftOperationType.START)
+      return LocaleKeys.Start.tr();
+    else if(context.read<ShiftModel>().shiftOperationType==WorkerShiftOperationType.TRANSFER)
+      return LocaleKeys.Transfer.tr();
+    else
+      return LocaleKeys.FinishIt.tr();
   }
 
   InkWell takePhoto()
@@ -160,6 +179,9 @@ class _WorkerShiftOperationsState extends BaseState<WorkerShiftOperations> {
           await picker.getImage(source: ImageSource.camera);
           setState(() {
             file = File(imagePicker!.path);
+            final bytes = File(file!.path).readAsBytesSync();
+            img64 = base64Encode(bytes);
+            debugPrint(img64);
           });
         },
         child: Container(

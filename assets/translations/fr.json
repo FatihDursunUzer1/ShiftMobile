@@ -37,5 +37,8 @@
   "Search": "Rechercher",
   "Error": "Erreur",
   "UserNotFound": "Aucun utilisateur trouvé, veuillez vous assurer que le numéro d'enregistrement est correct!",
-  "Okay": "D'accord"
+  "Okay": "D'accord",
+  "User": "Utilisateur",
+  "UserToBeTransferred": "Utilisateur à transférer",
+  "Approve": "Approuver"
 }

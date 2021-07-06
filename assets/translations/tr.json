@@ -37,5 +37,8 @@
   "Search": "Ara",
   "Error": "Hata",
   "UserNotFound": "Kullanıcı bulunamadı, lütfen sicil numarasının doğruluğundan emin olunuz!",
-  "Okay": "Tamam"
+  "Okay": "Tamam",
+  "User": "Kullanıcı",
+  "UserToBeTransferred": "Transfer Edilecek Kullanıcı",
+  "Approve": "Onayla"
 }

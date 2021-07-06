@@ -37,6 +37,9 @@
   "Search": "Search",
   "Error": "Error",
   "UserNotFound": "No user found, please make sure that the registration number is correct!",
-  "Okay": "Okay"
+  "Okay": "Okay",
+  "User": "User",
+  "UserToBeTransferred": "User to be transferred",
+  "Approve": "Approve"
 
 }

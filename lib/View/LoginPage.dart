@@ -20,16 +20,15 @@ import 'package:shift/app/Validators.dart';
 import 'package:shift/core/init/LanguageManager.dart';
 import 'package:shift/generated/locale_keys.g.dart';
 
-/* Paddingler vs için constant sınıfı oluştur */
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends BaseState<LoginPage> {
-  late bool _rememberMe;
+  //late bool _rememberMe;
   bool? _firstTime;
-  bool? _isDisable;
+  //bool? _isDisable;
   late TextEditingController _registrationNumberController;
   late GlobalKey<FormState> _loginFormKey;
   SharedPreferences? _prefs;
@@ -41,9 +40,11 @@ class _LoginPageState extends BaseState<LoginPage> {
     super.initState();
     _registrationNumberController = TextEditingController();
     _loginFormKey = GlobalKey<FormState>();
-    _rememberMe = false;
+    //_rememberMe = false;
     _firstTime = true;
-    _isDisable = true;
+    //_isDisable = true;
+    context.read<LoginViewModel>().rememberMe=false;
+    context.read<LoginViewModel>().isDisable=true;
   }
 
   @override
@@ -173,10 +174,7 @@ class _LoginPageState extends BaseState<LoginPage> {
     return Row(
       children: [
         circularCheckBox(onTap: () {
-          setState(() {
-            _rememberMe = !_rememberMe;
-          });
-
+          context.read<LoginViewModel>().rememberMe=!context.read<LoginViewModel>().rememberMe;
         }),
         SizedBox(width: 15),
         Text(
@@ -190,13 +188,13 @@ class _LoginPageState extends BaseState<LoginPage> {
   EButton loginButton()
   {
     return EButton(
-      onPressed: _isDisable != true ? formValidator : null,
+      onPressed: context.watch<LoginViewModel>().isDisable != true ? formValidator : null,
       text: LocaleKeys.Login.tr(),
       icon: Icon(
         Icons.check,
         color: Colors.white,
       ),
-      backgroundColor: _isDisable == true ? Colors.grey : Colors.blue,
+      backgroundColor: context.watch<LoginViewModel>().isDisable == true ? Colors.grey : Colors.blue,
     );
   }
 
@@ -208,7 +206,7 @@ class _LoginPageState extends BaseState<LoginPage> {
         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
         child: Padding(
           padding: const EdgeInsets.all(0),
-          child: _rememberMe
+          child: context.watch<LoginViewModel>()._rememberMe
               ? Icon(
                   Icons.check,
                   size: 18,
@@ -228,15 +226,11 @@ class _LoginPageState extends BaseState<LoginPage> {
     String? errorMessage = registrationNumberValidator(registrationNumber);
     if (errorMessage != null || errorMessage == "") {
       Future.delayed(Duration.zero).then((_) {
-        setState(() {
-          _isDisable = true;
-        });
+        context.read<LoginViewModel>().isDisable=true;
       });
     } else {
       Future.delayed(Duration.zero).then((_) {
-        setState(() {
-          _isDisable = false;
-        });
+        context.read<LoginViewModel>().isDisable=false;
       });
     }
     return errorMessage;
@@ -248,9 +242,29 @@ class _LoginPageState extends BaseState<LoginPage> {
       _loginFormKey.currentState!.save();
       context.read<UserModel>().user =
           Worker(userName: "Ender Erdihan", userType: UserType.WORKER,registrationNumber: _registrationNumberController.text);
-      if(_rememberMe==true)
+      if(context.read<LoginViewModel>()._rememberMe==true)
         await PreferenceUtils.setString("RegistrationNumber", _registrationNumberController.text);
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage()));
     } else {}
+  }
+}
+
+class LoginViewModel with ChangeNotifier{
+  late bool _rememberMe;
+  late bool _isDisable;
+
+
+  bool get rememberMe => _rememberMe;
+
+  set rememberMe(bool value) {
+    _rememberMe = value;
+    notifyListeners();
+  }
+
+  bool get isDisable => _isDisable;
+
+  set isDisable(bool value) {
+    _isDisable = value;
+    notifyListeners();
   }
 }

@@ -8,10 +8,12 @@ import 'package:shift/CommonWidget/ShiftAppBarWithoutActions.dart';
 import 'package:shift/CommonWidget/UserNotFoundAlertDialog.dart';
 import 'package:shift/View/Abstract/BaseState.dart';
 import 'package:shift/View/LoginPage.dart';
+import 'package:shift/ViewModel/CreateShiftViewModel.dart';
 import 'package:shift/app/Constants/ColorTable.dart';
 import 'package:shift/app/SizeConfig.dart';
 import 'package:shift/app/Validators.dart';
 import 'package:shift/generated/locale_keys.g.dart';
+import 'package:provider/provider.dart';
 
 class CreateShift extends StatefulWidget {
   @override
@@ -20,10 +22,7 @@ class CreateShift extends StatefulWidget {
 
 class _CreateShiftState extends BaseState<CreateShift> {
   TextEditingController? _registrationNumberController;
-  bool? _firstSearchButton;
-  bool? _secondSearchButton;
-  DateTime? _startedTime;
-  DateTime? _endTime;
+
   late DateFormat _formattedDate;
   TextEditingController? _shiftPerson;
   TextEditingController? _transferPerson;
@@ -32,11 +31,11 @@ class _CreateShiftState extends BaseState<CreateShift> {
   void initState() {
     super.initState();
     _registrationNumberController = TextEditingController();
-    _firstSearchButton = false;
-    _secondSearchButton = false;
+    context.read<CreateShiftModelView>().firstSearchButton=false;
+    context.read<CreateShiftModelView>().secondSearchButton=false;
     _formattedDate = DateFormat('dd.MM.yyyy  kk:mm');
-    _startedTime = DateTime.now();
-    _endTime = DateTime.now();
+    context.read<CreateShiftModelView>().startedTime = DateTime.now();
+    context.read<CreateShiftModelView>().endTime = DateTime.now();
     _shiftPerson = TextEditingController();
     _transferPerson = TextEditingController();
   }
@@ -99,22 +98,19 @@ class _CreateShiftState extends BaseState<CreateShift> {
   _registrationNumberValidator(String value, bool flag) {
     String? errorMessage = registrationNumberValidator(value);
     if (errorMessage != null || errorMessage == "") {
-      /* Future.delayed(Duration.zero).then((_) {
-        setState(() {
+       Future.delayed(Duration.zero).then((_) {
           if (flag == true)
-            _firstSearchButton = false;
+            context.read<CreateShiftModelView>().firstSearchButton=false;
           else
-            _secondSearchButton = false;
-        });
-      }); */
+            context.read<CreateShiftModelView>().secondSearchButton=false;
+      });
     } else {
       Future.delayed(Duration.zero).then((_) {
-        setState(() {
+
           if (flag == true)
-            _firstSearchButton = true;
+            context.read<CreateShiftModelView>().firstSearchButton=true;
           else
-            _secondSearchButton = true;
-        });
+            context.read<CreateShiftModelView>().secondSearchButton=true;
       });
     }
     return errorMessage;
@@ -138,27 +134,45 @@ class _CreateShiftState extends BaseState<CreateShift> {
               time = await (showDatePicker(
                   initialDatePickerMode: DatePickerMode.day,
                   context: context,
-                  initialDate: starttime==LocaleKeys.StartTime.tr()?_startedTime!:_endTime!,
-                  firstDate: starttime==LocaleKeys.StartTime.tr()?DateTime.now():_startedTime!,
+                  initialDate: starttime==LocaleKeys.StartTime.tr()?context.read<CreateShiftModelView>().startedTime:context.read<CreateShiftModelView>().endTime,
+                  firstDate: starttime==LocaleKeys.StartTime.tr()?DateTime.now():context.read<CreateShiftModelView>().startedTime,
                   lastDate: DateTime(2023, 8)));
-              final timePicker = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.fromDateTime(_startedTime!));
-              setState(() {
-                if (starttime == LocaleKeys.StartTime.tr())
-                  {
-                  _startedTime = time!.add(Duration(
-                      hours: timePicker!.hour, minutes: timePicker.minute));
-                  }
-                if (_endTime!.isBefore(_startedTime!)) {
-                  _endTime = _startedTime;
-                  _startedTime!.add(Duration(
-                      hours: timePicker!.hour, minutes: timePicker.minute));
-                } else if (starttime == LocaleKeys.EndTime.tr()) {
-                  _endTime = time!.add(Duration(
+              if(time!=null) {
+                final timePicker = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.fromDateTime(context
+                        .read<CreateShiftModelView>()
+                        .startedTime));
+
+                if (starttime == LocaleKeys.StartTime.tr()) {
+                  context
+                      .read<CreateShiftModelView>()
+                      .startedTime = time!.add(Duration(
                       hours: timePicker!.hour, minutes: timePicker.minute));
                 }
-              });
+                if (context
+                    .read<CreateShiftModelView>()
+                    .endTime
+                    .isBefore(context
+                    .read<CreateShiftModelView>()
+                    .startedTime)) {
+                  context
+                      .read<CreateShiftModelView>()
+                      .endTime = context
+                      .read<CreateShiftModelView>()
+                      .startedTime;
+                  context
+                      .read<CreateShiftModelView>()
+                      .startedTime
+                      .add(Duration(
+                      hours: timePicker!.hour, minutes: timePicker.minute));
+                } else if (starttime == LocaleKeys.EndTime.tr()) {
+                  context
+                      .read<CreateShiftModelView>()
+                      .endTime = time!.add(Duration(
+                      hours: timePicker!.hour, minutes: timePicker.minute));
+                }
+              }
             },
           )
         ],
@@ -195,12 +209,12 @@ class _CreateShiftState extends BaseState<CreateShift> {
               registrationNumberTextArea(
                   _registrationNumberController,
                   _registrationNumberValidator,
-                  _firstSearchButton == false ? null : (){
+              context.watch<CreateShiftModelView>().firstSearchButton == false ? null : (){
                     search();
                   },
                   true),
-              dateRow(starttime: LocaleKeys.StartTime.tr(), time: _startedTime!),
-              dateRow(starttime: LocaleKeys.EndTime.tr(), time: _endTime!),
+              dateRow(starttime: LocaleKeys.StartTime.tr(), time: context.read<CreateShiftModelView>().startedTime),
+              dateRow(starttime: LocaleKeys.EndTime.tr(), time: context.read<CreateShiftModelView>().endTime),
               Divider(
                 color: Colors.black,
                 thickness: 2,
@@ -212,7 +226,7 @@ class _CreateShiftState extends BaseState<CreateShift> {
               registrationNumberTextArea(
                   _transferPerson,
                   _registrationNumberValidator,
-                  _secondSearchButton == false
+  context.watch<CreateShiftModelView>().secondSearchButton == false
                       ? null
                       :(){
                     search();
