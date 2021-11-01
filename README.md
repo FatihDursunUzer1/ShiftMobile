@@ -1,16 +1,17 @@
-# shift
+Shift mobil uygulaması.
 
-A new Flutter application.
+Şef ya da işçinin sistemde kayıtlı olan 6 haneli id'leri ile giriş yapabileceği; İşverenin işçilerini kontrol edebileceği, işçinin de mesaisini düzenleyebileceği,transfer edebileceği ve bitirdiğini gösteren mobil uygulama.
+Girilen id'ye göre kullanıcının Şef ya da işçi olduğu tespit edilir ve buna göre uygulama girişi gerçekleştirilir(API olmadığı için bunun tespiti yok)
 
-## Getting Started
+İşçi mesaisini bitirdiğine veya transfer ettiğine dair işlem yapacağı vakit uygulama içerisinden kendi fotoğrafını çekmesi gerekmektedir. Fotoğrafı çektiği anda telefonun konumu alınır, burada konumun fake bir konum olup olmadığı kontrol edilir. Eğer konum fake değilse işçi mesaisini transfer edebilir veya bitirebilir.
 
-This project is a starting point for a Flutter application.
+Şef kullanıcısı ise sistemde kendisine kayıtlı olan işçilere vardiya oluşturabilir ve bu vardiyaların takibini yapabilir.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Diller:
+  -Türkçe
+  -Fransızca
+  -İngilizce
+  
+
